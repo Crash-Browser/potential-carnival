@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        textReport true
+        textOutput 'stdout'
+    }
+
+    compileOptions {
+        sourceCompatibility versions.javaSourceCompatibility
+        targetCompatibility versions.javaTargetCompatibility
+    }
+}
+
+dependencies {
+    api deps.androidxTestRunner
+    api deps.androidxTestRules
+    api deps.appCompat
+
+    implementation deps.junitTest
+
+    compileOnly deps.robolectric
+    compileOnly deps.jsonAssert
+    compileOnly deps.mockk
+    compileOnly deps.mockitoCore
+
+    implementation project(':BraintreeCore')
+    implementation project(':ThreeDSecure')
+    implementation deps.coreKtx
+    implementation deps.kotlinStdLib
+
+}
+repositories {
+    mavenCentral()
+}

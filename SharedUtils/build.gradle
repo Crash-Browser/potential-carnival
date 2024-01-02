@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        buildConfigField "String", "VERSION_NAME", "\"${rootProject.versionName}\""
+    }
+
+    packagingOptions {
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+    }
+
+    lintOptions {
+        textReport true
+        textOutput 'stdout'
+    }
+
+    compileOptions {
+        sourceCompatibility versions.javaSourceCompatibility
+        targetCompatibility versions.javaTargetCompatibility
+    }
+}
+
+dependencies {
+    implementation deps.annotation
+    implementation deps.kotlinStdLib
+
+    testImplementation deps.junit
+    testImplementation deps.androidxTestCore
+    testImplementation deps.mockitoCore
+    testImplementation deps.robolectric
+    testImplementation deps.mockitoCore
+
+    androidTestImplementation deps.androidxTestRunner
+    androidTestImplementation deps.junitTest
+    androidTestImplementation deps.appCompat
+    androidTestImplementation deps.dexmakerMockito
+}
+
+// region signing and publishing
+
+project.ext.name = "shared-utils"
+project.ext.pom_name = "shared-utils"
+project.ext.group_id = "com.braintreepayments.api"
+project.ext.version = rootProject.version
+project.ext.pom_desc = "Library containing shared components used across Braintree\'s Android SDKs."
+
+apply from: rootProject.file("gradle/gradle-publish.gradle")
+
+// endregion

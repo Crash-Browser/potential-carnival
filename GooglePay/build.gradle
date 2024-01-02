@@ -1,0 +1,69 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'org.jetbrains.dokka'
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+
+        consumerProguardFiles 'proguard.pro'
+
+        buildConfigField "String", "VERSION_NAME", "\"${rootProject.versionName}\""
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    testOptions.unitTests {
+        all {
+            jvmArgs '-noverify'
+        }
+        returnDefaultValues true
+        includeAndroidResources true
+    }
+
+    compileOptions {
+        sourceCompatibility versions.javaSourceCompatibility
+        targetCompatibility versions.javaTargetCompatibility
+    }
+}
+
+dependencies {
+    implementation deps.appCompat
+    api deps.playServicesWallet
+
+    api project(':BraintreeCore')
+    api project(':PayPal')
+    api project(':Card')
+
+    testImplementation project(':TestUtils')
+    testImplementation deps.androidxTestRules
+    testImplementation deps.androidxTestRunner
+    testImplementation deps.playServicesWallet
+    testImplementation deps.mockitoCore
+    testImplementation deps.robolectric
+    testImplementation deps.jsonAssert
+    testImplementation deps.coreKtx
+    testImplementation deps.kotlinStdLib
+    testImplementation deps.kotlinCoroutinesCore
+    testImplementation deps.mockk
+    testImplementation deps.androidxTestCore
+}
+
+// region signing and publishing
+
+project.ext.name = "google-pay"
+project.ext.pom_name = "google-pay"
+project.ext.group_id = "com.braintreepayments.api"
+project.ext.version = rootProject.version
+project.ext.pom_desc = "Google Pay Module for Braintree\'s Android SDK."
+
+apply from: rootProject.file("gradle/gradle-publish.gradle")
+
+// endregion

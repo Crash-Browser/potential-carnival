@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.braintreepayments.demo.MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_cardFragment"
+            app:destination="@id/cardFragment"
+            app:popUpTo="@id/mainFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_localPaymentFragment"
+            app:destination="@id/localPaymentFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_payPalFragment"
+            app:destination="@id/payPalFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_googlePayFragment"
+            app:destination="@id/googlePayFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_samsungPayFragment"
+            app:destination="@id/samsungPayFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_visaCheckoutFragment"
+            app:destination="@id/visaCheckoutFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_venmoFragment"
+            app:destination="@id/venmoFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_sepaDirectDebitFragment"
+            app:destination="@id/SEPADirectDebitFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_payPalNativeCheckoutFragment"
+            app:destination="@id/payPalNativeCheckoutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardFragment"
+        android:name="com.braintreepayments.demo.CardFragment"
+        tools:layout="@layout/fragment_card">
+        <argument
+            android:name="shouldCollectDeviceData"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_cardFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayNonceFragment"
+        android:name="com.braintreepayments.demo.DisplayNonceFragment"
+        tools:layout="@layout/fragment_display_nonce">
+        <argument
+            android:name="paymentMethodNonce"
+            app:argType="com.braintreepayments.api.PaymentMethodNonce" />
+        <argument
+            android:name="transactionAmount"
+            android:defaultValue="1.00"
+            app:argType="string" />
+        <argument
+            android:name="deviceData"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_displayNonceFragment_to_createTransactionFragment"
+            app:destination="@id/createTransactionFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/createTransactionFragment"
+        android:name="com.braintreepayments.demo.CreateTransactionFragment"
+        android:label=""
+        tools:layout="@layout/fragment_create_transaction">
+        <argument
+            android:name="paymentMethodNonce"
+            app:argType="com.braintreepayments.api.PaymentMethodNonce" />
+        <argument
+            android:name="transactionAmount"
+            android:defaultValue="1.00"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.braintreepayments.demo.fragments.SettingsFragment" />
+
+    <action
+        android:id="@+id/open_settings_fragment"
+        app:destination="@id/settingsFragment" />
+    <fragment
+        android:id="@+id/localPaymentFragment"
+        android:name="com.braintreepayments.demo.LocalPaymentFragment"
+        tools:layout="@layout/fragment_local_payment">
+        <action
+            android:id="@+id/action_localPaymentFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/payPalFragment"
+        android:name="com.braintreepayments.demo.PayPalFragment"
+        tools:layout="@layout/fragment_paypal">
+        <argument
+            android:name="shouldCollectDeviceData"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_payPalFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/googlePayFragment"
+        android:name="com.braintreepayments.demo.GooglePayFragment"
+        tools:layout="@layout/fragment_google_pay">
+        <action
+            android:id="@+id/action_googlePayFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/visaCheckoutFragment"
+        android:name="com.braintreepayments.demo.VisaCheckoutFragment"
+        tools:layout="@layout/fragment_visa_checkout">
+        <action
+            android:id="@+id/action_visaCheckoutFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/venmoFragment"
+        android:name="com.braintreepayments.demo.VenmoFragment"
+        tools:layout="@layout/fragment_venmo">
+        <action
+            android:id="@+id/action_venmoFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/samsungPayFragment"
+        android:name="com.braintreepayments.demo.SamsungPayFragment"
+        tools:layout="@layout/fragment_samsung_pay">
+        <action
+            android:id="@+id/action_samsungPayFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/payPalNativeCheckoutFragment"
+        android:name="com.braintreepayments.demo.PayPalNativeCheckoutFragment"
+        android:label="fragment_paypal_native_checkout"
+        tools:layout="@layout/fragment_paypal_native_checkout">
+        <action
+            android:id="@+id/action_payPalNativeCheckoutFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/SEPADirectDebitFragment"
+        android:name="com.braintreepayments.demo.SEPADirectDebitFragment"
+        tools:layout="@layout/fragment_sepa_direct_debit" >
+        <action
+            android:id="@+id/action_sepaDirectDebitFragment_to_displayNonceFragment"
+            app:destination="@id/displayNonceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+</navigation>

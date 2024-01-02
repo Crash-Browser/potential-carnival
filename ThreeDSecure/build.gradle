@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'org.jetbrains.dokka'
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+
+        consumerProguardFiles 'proguard.pro'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                jvmArgs '-noverify'
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility versions.javaSourceCompatibility
+        targetCompatibility versions.javaTargetCompatibility
+    }
+}
+
+dependencies {
+    api project(':BraintreeCore')
+    api project(':Card')
+    implementation deps.cardinal
+
+    implementation deps.appCompat
+    implementation deps.lifecycleRuntime
+
+    testImplementation deps.robolectric
+    testImplementation deps.mockk
+    testImplementation deps.mockitoCore
+    testImplementation deps.jsonAssert
+    testImplementation deps.androidxTestCore
+    testImplementation project(':TestUtils')
+
+    androidTestImplementation deps.dexmakerMockito
+    androidTestImplementation deps.androidxTestRules
+    androidTestImplementation deps.androidxTestRunner
+    androidTestImplementation deps.junitTest
+    androidTestImplementation project(':TestUtils')
+}
+
+// region signing and publishing
+
+project.ext.name = "three-d-secure"
+project.ext.pom_name = "three-d-secure"
+project.ext.group_id = "com.braintreepayments.api"
+project.ext.version = rootProject.version
+project.ext.pom_desc = "3DS dependencies for Braintree Android."
+
+apply from: rootProject.file("gradle/gradle-publish.gradle")
+
+ // endregion
+

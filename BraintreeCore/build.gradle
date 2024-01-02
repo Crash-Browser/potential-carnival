@@ -1,0 +1,117 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'org.jetbrains.dokka'
+    id 'kotlin-kapt'
+}
+
+def DEVELOPMENT_URL = System.properties['DEVELOPMENT_URL'] ?: '"http://10.0.2.2:3000/"'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+
+        consumerProguardFiles 'proguard.pro'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        buildConfigField "String", "VERSION_NAME", "\"${rootProject.versionName}\""
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                jvmArgs '-noverify'
+            }
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+    }
+
+    lintOptions {
+        textReport true
+        textOutput 'stdout'
+    }
+
+    compileOptions {
+        sourceCompatibility versions.javaSourceCompatibility
+        targetCompatibility versions.javaTargetCompatibility
+    }
+}
+
+
+dependencies {
+    implementation deps.appCompat
+    implementation deps.work
+
+    implementation deps.coreKtx
+    implementation deps.kotlinStdLib
+
+    implementation deps.roomRuntime
+
+    // Ref: https://stackoverflow.com/a/51067251
+    kapt deps.roomCompiler
+
+    api deps.browserSwitch
+    api project(':SharedUtils')
+
+    androidTestImplementation deps.playServicesWallet
+    androidTestImplementation deps.dexmakerMockito
+    androidTestImplementation deps.androidxTestRules
+    androidTestImplementation deps.androidxTestRunner
+    androidTestImplementation deps.junitTest
+    androidTestImplementation deps.workTesting
+    androidTestImplementation project(':Card')
+    androidTestImplementation project(':PayPal')
+    androidTestImplementation project(':TestUtils')
+
+    testImplementation deps.workTesting
+    testImplementation deps.robolectric
+    testImplementation deps.androidxTestCore
+    testImplementation deps.junitTest
+    testImplementation deps.mockitoCore
+    testImplementation deps.jsonAssert
+    testImplementation deps.mockk
+    testImplementation project(':PayPal')
+    testImplementation project(':TestUtils')
+    testImplementation project(':UnionPay')
+    testImplementation project(':Venmo')
+
+    // Ref: https://kotlin.github.io/dokka/1.8.0-SNAPSHOT/user_guide/applying/gradle/#applying-plugins
+    dokkaHtmlPartialPlugin 'org.jetbrains.dokka:android-documentation-plugin:1.7.20'
+}
+
+android.buildTypes.each { type ->
+    type.buildConfigField 'String', 'DEVELOPMENT_URL', DEVELOPMENT_URL
+}
+
+task runAllTests {
+    /*
+     * Empty task to run via command line Rakefile or ci.sh to indicate that tests that depend on
+     * setting up external services (like the test invalid https server) are set up correctly.
+     * Otherwise, these tests will be skipped
+     */
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    def RUN_ALL_TESTS = taskGraph.hasTask(':Braintree:runAllTests')
+    android.buildTypes.debug.buildConfigField('boolean', 'RUN_ALL_TESTS', '' + RUN_ALL_TESTS)
+}
+
+// region signing and publishing
+
+project.ext.name = "braintree-core"
+project.ext.pom_name = "braintree-core"
+project.ext.group_id = "com.braintreepayments.api"
+project.ext.version = rootProject.version
+project.ext.pom_desc = "This is Braintree\'s Android SDK. Integrate this library to accept payments in your Android app."
+
+apply from: rootProject.file("gradle/gradle-publish.gradle")
+
+// endregion
